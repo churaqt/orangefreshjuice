@@ -8,17 +8,24 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->string('customer_name');
-            $table->decimal('total_price', 10, 2);
-            $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            $table->string('product_name');
+            $table->integer('quantity');
+            $table->string('sugar_level');
+            $table->string('ice_level');
+            $table->decimal('price', 10, 2);
+            $table->enum('juice_type', ['fresh', 'mix', 'berry'])->default('fresh');
+            $table->foreignId('fruit_id')->constrained('fruits');
+            $table->foreignId('second_fruit_id')->nullable()->constrained('fruits');
+            $table->boolean('stock_reduced')->default(false);
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('order_items');
     }
 };
